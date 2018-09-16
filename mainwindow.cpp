@@ -21,7 +21,35 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     initNetwork();
+
+
+
+
+
+
+
+    getParams(QCoreApplication::arguments());
+
+
+    if (HIDE_CURSOR)
+    {
+        QCursor cursor(Qt::BlankCursor);
+        QApplication::setOverrideCursor(cursor);
+        QApplication::changeOverrideCursor(cursor);
+    }
+
+
+
+
+
+
     setWindowState(Qt::WindowFullScreen);
+
+
+
+
+
+
 
     for (int i = 0;i<3;i++)
     {
@@ -47,6 +75,36 @@ MainWindow::MainWindow(QWidget *parent) :
     t0->start(1000*ROTATION);
 
 }
+
+
+
+
+
+
+
+void MainWindow::getParams(QStringList params)
+{
+    qDebug()<<params;
+    if(params.size()>1)
+        PATH = params[1];
+    else
+        PATH=PATH_DEFAULT;
+
+    if(params.size()>2)
+        HIDE_CURSOR = (params[2]=="true");
+    else
+        HIDE_CURSOR = false;
+
+}
+
+
+
+
+
+
+
+
+
 
 
 void MainWindow::updateScores()
@@ -91,14 +149,17 @@ int MainWindow::requestData1(int level)
     request.setSslConfiguration(conf);
     request.setUrl(QUrl("https://cyberquestevent2018.ae/game/top/scorer/1/"+QString::number(level)+"/"));
 
+
+    scores1.clear();
+    names1.clear();
+
+
     QNetworkReply *reply = manager->get(request);
 
     QEventLoop loop;
     connect(manager,SIGNAL(finished(QNetworkReply*)), &loop, SLOT(quit()));
     loop.exec();
 
-    scores1.clear();
-    names1.clear();
 
 
     if (reply->error()) {
@@ -156,11 +217,20 @@ int MainWindow::requestData2(int level)
     request.setSslConfiguration(conf);
     request.setUrl(QUrl("https://cyberquestevent2018.ae/game/top/scorer/2/"+QString::number(level)+"/"));
 
+
+    scores2.clear();
+    names2.clear();
+
+
+
+
     QNetworkReply *reply = manager->get(request);
+
 
     QEventLoop loop;
     connect(manager,SIGNAL(finished(QNetworkReply*)), &loop, SLOT(quit()));
     loop.exec();
+
 
 
     if (reply->error()) {
@@ -183,8 +253,7 @@ int MainWindow::requestData2(int level)
     QJsonObject r1;
     QString name;
     int score;
-    scores2.clear();
-    names2.clear();
+
 
     for(QJsonValue r:results)
     {

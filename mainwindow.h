@@ -7,7 +7,7 @@
 #include <QMainWindow>
 #include "scorewall.h"
 #include "qtimer.h"
-#define PATH (QString)"/home/fred/Dropbox/Taf/Cassiopee/cybergame/files/"
+#define PATH_DEFAULT (QString)"/home/fred/Dropbox/Taf/Cassiopee/cybergame/files/"
 
 
 #define NETWORK_OK 0
@@ -32,12 +32,13 @@ public:
     int requestData1(int level);
     int requestData2(int level);
 private:
-
     Ui::MainWindow *ui;
     int currentLevel;
     QTimer *t0;
     void initNetwork();
-
+    void getParams(QStringList params);
+    QString PATH;
+    bool HIDE_CURSOR;
     int postData(QString id,int gameId,int score,int attempt);
     QNetworkAccessManager  *manager;
 
