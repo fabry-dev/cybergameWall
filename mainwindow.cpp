@@ -97,11 +97,13 @@ int MainWindow::requestData1(int level)
     connect(manager,SIGNAL(finished(QNetworkReply*)), &loop, SLOT(quit()));
     loop.exec();
 
+    scores1.clear();
+    names1.clear();
+
 
     if (reply->error()) {
         qDebug() << reply->errorString();
-        scores1.clear();
-        names1.clear();
+
         return NETWORK_FAIL;
     }
 
@@ -123,8 +125,7 @@ int MainWindow::requestData1(int level)
     QJsonObject r1;
     QString name;
     int score;
-    scores1.clear();
-    names1.clear();
+
 
 
 
